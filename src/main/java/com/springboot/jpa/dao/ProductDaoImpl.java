@@ -1,6 +1,7 @@
 package com.springboot.jpa.dao;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class ProductDaoImpl implements ProductDAO {
 			
 			updateProduct = productRepository.save(product);
 		}else {
-			throw new Exception();
+			throw new Exception("input data: " + number +" / 해당 데이터가 없습니다.");
 		}
 		
 		return updateProduct;
@@ -53,8 +54,21 @@ public class ProductDaoImpl implements ProductDAO {
 
 	@Override
 	public void deleteProduct(Long number) throws Exception {
-		// TODO Auto-generated method stub
+		Optional<ProductEntity> selectProduct = productRepository.findById(number);
 		
+		if(selectProduct.isPresent()) {
+			ProductEntity product = selectProduct.get();
+			
+			productRepository.delete(product);
+		}else {
+			throw new Exception("삭제에 실패하였습니다.");
+		}
+		
+	}
+
+	@Override
+	public List<ProductEntity> getProductAll(){
+		return productRepository.findAll();
 	}
 
 }

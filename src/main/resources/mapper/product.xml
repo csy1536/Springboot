@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.jpa.mapper.ProductMapper">	<!-- mapper 인터페이스가 위치하는 경로 -->
+    <select id="getMbProductById" resultType="com.springboot.jpa.entity.ProductEntity">	<!-- id: mapper 인터페이스에서 선언한 메서드 이름과 같아야 한다. resultType: VO 클래스가 위치하는 경로 -->
+        SELECT * FROM product
+        	where number = #{id}
+    </select>
+    
+    <select id="getMbProductByParam" resultType="com.springboot.jpa.entity.ProductEntity">
+		SELECT 
+				number,
+				name,
+				price,
+				stock
+		FROM	
+				product
+		WHERE
+			1=1
+			<if test="name != '' and name != null">
+				AND name = #{name}
+			</if>
+			<if test="stock !='' and stock != null">
+				AND stock = #{stock}
+			</if>
+			<if test="price !='' and price != null">
+				AND price = #{price}
+			</if>
+				
+	</select>
+</mapper>

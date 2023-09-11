@@ -1,7 +1,11 @@
 package com.springboot.jpa.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +13,15 @@ import com.springboot.jpa.dao.ProductDAO;
 import com.springboot.jpa.dto.ProductDTO;
 import com.springboot.jpa.dto.ProductResponseDTO;
 import com.springboot.jpa.entity.ProductEntity;
+import com.springboot.jpa.mapper.ProductMapper;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 	
 	private final ProductDAO productDAO;
+	
+	@Autowired
+	public ProductMapper productMapper;
 	
 	@Autowired
 	public ProductServiceImpl(ProductDAO productDAO) {
@@ -71,6 +79,62 @@ public class ProductServiceImpl implements ProductService {
 	public void deleteProduct(Long number) throws Exception {
 		productDAO.deleteProduct(number);
 		
+	}
+
+	@Override
+	public List<ProductResponseDTO> getProducts() {
+		List<ProductEntity> products = productDAO.getProductAll();
+		List<ProductResponseDTO> result = new ArrayList<>();
+		
+		for (ProductEntity product : products) {
+			ProductResponseDTO dto  = ProductResponseDTO.builder()
+										.name(product.getName())
+										.number(product.getNumber())
+										.price(product.getPrice())
+										.stock(product.getPrice())
+										.build();
+			result.add(dto);
+		}
+		
+		return result;
+	}
+
+	//mybatis를 이용한 데이터 가져오기
+	@Override
+	public List<ProductResponseDTO> getMbProductById(Long id) {
+		List<ProductEntity> products = productMapper.getMbProductById(id);
+		
+		List<ProductResponseDTO> result = new ArrayList<>();
+		
+		for (ProductEntity product : products) {
+			ProductResponseDTO dto  = ProductResponseDTO.builder()
+										.name(product.getName())
+										.number(product.getNumber())
+										.price(product.getPrice())
+										.stock(product.getPrice())
+										.build();
+			result.add(dto);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<ProductResponseDTO> getProductByParam(ProductDTO param) {
+		List<ProductEntity> products = productMapper.getMbProductByParam(param);
+		
+		List<ProductResponseDTO> result = new ArrayList<>();
+		for (ProductEntity product : products) {
+			ProductResponseDTO dto  = ProductResponseDTO.builder()
+										.name(product.getName())
+										.number(product.getNumber())
+										.price(product.getPrice())
+										.stock(product.getStock())
+										.build();
+			result.add(dto);
+		}
+		
+		return result;
 	}
 
 }
