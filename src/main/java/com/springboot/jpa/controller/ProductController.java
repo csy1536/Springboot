@@ -2,27 +2,29 @@ package com.springboot.jpa.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.annotation.JsonValueInstantiator;
 import com.springboot.jpa.dto.ChangeProductNameDTO;
 import com.springboot.jpa.dto.ProductDTO;
 import com.springboot.jpa.dto.ProductResponseDTO;
+import com.springboot.jpa.group.ValidatorGroup1;
+import com.springboot.jpa.group.ValidatorGroup2;
 import com.springboot.jpa.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Delegate;
 
 @Tag(name = "product", description = "product 조회, 수정, 삭제, 추가")
 @RestController
@@ -41,7 +43,7 @@ public class ProductController {
 	@GetMapping("/")
 	public ResponseEntity<ProductResponseDTO> getProduct(Long number){
 		ProductResponseDTO result = productService.getProduct(number);
-		return new ResponseEntity(result, HttpStatus.OK);
+		return new ResponseEntity<ProductResponseDTO>(result, HttpStatus.OK);
 		
 	}
 	
@@ -71,9 +73,9 @@ public class ProductController {
 	
 	@Operation(summary = "save product", description = "product 정보 저장하기")
 	@PostMapping("/")
-	public ResponseEntity<ProductResponseDTO> saveProduct(@RequestBody ProductDTO productDTO){
+	public ResponseEntity<ProductResponseDTO> saveProduct(@Valid @RequestBody ProductDTO productDTO){
 		ProductResponseDTO result = productService.saveProduct(productDTO);
-		return new ResponseEntity(result, HttpStatus.OK);
+		return new ResponseEntity<ProductResponseDTO>(result, HttpStatus.OK);
 	}
 	
 	@Operation(summary = "modify proudct name", description = "product name 변경하기")
