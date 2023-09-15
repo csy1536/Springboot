@@ -1,14 +1,20 @@
 package com.springboot.jpa.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.jpa.dto.ChangeProductNameDTO;
 import com.springboot.jpa.dto.ProductDTO;
 import com.springboot.jpa.dto.ProductResponseDTO;
-import com.springboot.jpa.group.ValidatorGroup1;
-import com.springboot.jpa.group.ValidatorGroup2;
 import com.springboot.jpa.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +35,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/product")
 public class ProductController {
 	
+	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 	
 	private ProductService productService;
 	
@@ -92,4 +97,26 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
 	}
 
+	@Operation(summary = "runtimeException 호출", description = "runtimeException 호출 테스트")
+	@GetMapping("/exception")
+	public void getRuntimeException() {
+		throw new RuntimeException("getRuntimeException 메서드 호출");
+	}
+	
+/* Controller내 ExceptionHandler 생성 */
+//	@ExceptionHandler(value = RuntimeException.class)
+//	public ResponseEntity<Map<String,String>> handleException(RuntimeException e, HttpServletRequest request){
+//		HttpHeaders resHeader = new HttpHeaders();
+//		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+//		
+//		LOGGER.error("Advice 내 handlerException 호출, {}, {}", request.getRequestURI(), e.getMessage());
+//		
+//		Map<String, String> map = new HashMap<>();
+//		map.put("error type", httpStatus.getReasonPhrase());
+//		map.put("code", "400");
+//		map.put("message", e.getMessage());
+//		
+//		return new ResponseEntity<Map<String,String>>(map, resHeader, httpStatus);
+//		
+//	}
 }
